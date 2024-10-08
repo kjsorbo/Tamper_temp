@@ -1,6 +1,7 @@
 #ifndef AZUREIOTMANAGER_H
 #define AZUREIOTMANAGER_H
 
+
 #include <Esp32MQTTClient.h>  // Using ESP32 Azure IoT Hub library
 #include "iot_configs.h"      // Configuration settings for Azure IoT Hub
 
