@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Configuration</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://raw.githubusercontent.com/your-username/your-repository-name/main/assets/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
 
+        .form-container {
+            background: rgba(255, 255, 255, 0.7); /* Add transparency */
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>WiFi Config</h1>
+        <form action="/save" method="POST">
+            <label for="ssid">WiFi SSID:</label>
+            <input type="text" id="ssid" name="ssid" required>
+
+            <label for="password">WiFi Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="hostname">Azure Hostname:</label>
+            <input type="text" id="hostname" name="hostname" required>
+
+            <label for="deviceid">Azure Device ID:</label>
+            <input type="text" id="deviceid" name="deviceid" required>
+
+            <button type="submit">Save Configuration</button>
+        </form>
+    </div>
+</body>
+</html>
