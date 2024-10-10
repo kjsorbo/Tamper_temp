@@ -1,4 +1,4 @@
-This is a template for Arduino OTA-implementation. Needs a switch to exit sleep-mode routine for it to work. This is not implemented in code yet. 
+This is a template for Arduino OTA-implementation. Needs a switch to exit sleep-mode routine for it to work. This is not yet implemented in code. 
 
 
 Wokring zip-command for ChatGPT
