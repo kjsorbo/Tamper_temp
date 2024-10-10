@@ -18,10 +18,12 @@ void setup() {
     PowerManager::printWakeupReason();
 
     wifiManager.connect();
-    azureIoTManager.connect();
 
-    // Send telemetry data
-    azureIoTManager.sendTelemetry("{\"message\":\"Hello, Azure!\"}");
+    if (wifiManager.isConnected()) {
+        azureIoTManager.connect();
+        // Send telemetry data
+        azureIoTManager.sendTelemetry("{\"message\":\"Hello, Azure!\"}");
+    }
 
     PowerManager::configureWakeup(BUTTON_PIN_BITMASK, TIME_TO_SLEEP);
     PowerManager::enterDeepSleep();
