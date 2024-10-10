@@ -2,6 +2,7 @@
 #include <SPIFFS.h>
 #include <FS.h>
 #include <Arduino.h>
+#include <ArduinoOTA.h>  // Include ArduinoOTA library
 
 WiFiManager::WiFiManager(const char* ssid, const char* password) 
     : _ssid(ssid), _password(password), server(80) {}
@@ -18,6 +19,9 @@ void WiFiManager::connect() {
 
     if (WiFi.status() == WL_CONNECTED) {
         Serial.println("\nConnected to Wi-Fi!");
+
+        // Start Arduino OTA service if connected to Wi-Fi
+        setupOTA();
     } else {
         Serial.println("\nFailed to connect. Starting Access Point...");
         startAP();
@@ -65,6 +69,33 @@ void WiFiManager::startWebServer() {
 
     server.begin();
     Serial.println("Web Server Started");
+}
+
+void WiFiManager::setupOTA() {
+    // Setup Arduino OTA callbacks
+    ArduinoOTA.onStart([]() {
+        String type = (ArduinoOTA.getCommand() == U_FLASH) ? "sketch" : "filesystem";
+        Serial.println("Start updating " + type);
+    });
+
+    ArduinoOTA.onEnd([]() { Serial.println("\nEnd"); });
+
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+
+    ArduinoOTA.onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+        else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+        else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+        else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+        else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    });
+
+    // Start the OTA service
+    ArduinoOTA.begin();
+    Serial.println("Arduino OTA Ready");
 }
 
 bool WiFiManager::isConnected() {
