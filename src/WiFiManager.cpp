@@ -1,15 +1,15 @@
 #include "WiFiManager.h"
+#include <SPIFFS.h>
+#include <FS.h>
 #include <Arduino.h>
 
 WiFiManager::WiFiManager(const char* ssid, const char* password) 
-    : _ssid(ssid), _password(password), server(80) {}  // Initialize server on port 80
+    : _ssid(ssid), _password(password), server(80) {}
 
 void WiFiManager::connect() {
     Serial.printf("Connecting to Wi-Fi: %s\n", _ssid);
     WiFi.begin(_ssid, _password);
     int retryCount = 0;
-
-    // Attempt to connect for up to 10 seconds
     while (WiFi.status() != WL_CONNECTED && retryCount < 20) {
         delay(500);
         Serial.print(".");
@@ -34,18 +34,19 @@ void WiFiManager::startAP() {
 }
 
 void WiFiManager::startWebServer() {
-    // Serve the configuration page with an updated form to match the index.html file
+    // Initialize SPIFFS
+    if (!SPIFFS.begin(true)) {
+        Serial.println("Failed to mount SPIFFS");
+        return;
+    }
+    Serial.println("SPIFFS mounted successfully");
+
+    // Serve the index.html from SPIFFS
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/html", "<h1>Device Configuration Page</h1><form method='post' action='/configure'>"
-                                        "SSID: <input type='text' name='ssid'><br>"
-                                        "Password: <input type='password' name='password'><br>"
-                                        "Azure IoT Hub Name: <input type='text' name='hubName'><br>"
-                                        "Device ID: <input type='text' name='deviceId'><br>"
-                                        "SAS Key: <input type='text' name='sasKey'><br>"
-                                        "<input type='submit' value='Save'></form>");
+        request->send(SPIFFS, "/index.html", "text/html");
     });
 
-    // Handle form submission with all fields
+    // Handle form submission
     server.on("/configure", HTTP_POST, [](AsyncWebServerRequest *request) {
         String ssid, password, hubName, deviceId, sasKey;
 
@@ -55,11 +56,10 @@ void WiFiManager::startWebServer() {
         if (request->hasParam("deviceId", true)) deviceId = request->getParam("deviceId", true)->value();
         if (request->hasParam("sasKey", true)) sasKey = request->getParam("sasKey", true)->value();
 
-        // Save these values to NVS, preferences, or handle as needed
+        // Save these values as needed
         Serial.printf("SSID: %s, Password: %s, Hub Name: %s, Device ID: %s, SAS Key: %s\n", 
                       ssid.c_str(), password.c_str(), hubName.c_str(), deviceId.c_str(), sasKey.c_str());
 
-        // Send a response back to the client
         request->send(200, "text/html", "<h2>Configuration Saved!</h2><p>Please reboot the device.</p>");
     });
 
