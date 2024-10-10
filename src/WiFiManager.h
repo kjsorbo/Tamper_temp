@@ -8,15 +8,16 @@ class WiFiManager {
 public:
     WiFiManager(const char* ssid, const char* password);
     void connect();
-    void startAP();  // Start Access Point mode
-    void startWebServer();  // Start the async web server
+    void startAP();              // Start Access Point mode
+    void startWebServer();       // Start the async web server
+    void setupOTA();             // Declare the setupOTA function
     bool isConnected();
     void disconnect();
 
 private:
     const char* _ssid;
     const char* _password;
-    AsyncWebServer server;  // Declare an AsyncWebServer instance
+    AsyncWebServer server;       // Declare an AsyncWebServer instance
 };
 
 #endif
