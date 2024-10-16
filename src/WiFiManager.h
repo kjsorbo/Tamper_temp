@@ -19,5 +19,4 @@ private:
     const char* _password;
     AsyncWebServer server;       // Declare an AsyncWebServer instance
 };
-
 #endif

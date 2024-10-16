@@ -31,7 +31,7 @@ void WiFiManager::connect() {
 
 void WiFiManager::startAP() {
     // Start Access Point
-    WiFi.softAP("DeviceConfigAP", "12345678");
+    WiFi.softAP("Tamper00001", "12345678");
     Serial.println("Access Point Started: DeviceConfigAP");
     Serial.print("AP IP address: ");
     Serial.println(WiFi.softAPIP());
